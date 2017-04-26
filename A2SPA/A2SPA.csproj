@@ -37,6 +37,7 @@
     <DotNetCliToolReference Include="Microsoft.DotNet.Watcher.Tools" Version="1.0.0" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\A2SPA.Data.Repo\A2SPA.Data.Repo.csproj" />
     <ProjectReference Include="..\A2SPA.Data\A2SPA.Data.csproj" />
   </ItemGroup>
 

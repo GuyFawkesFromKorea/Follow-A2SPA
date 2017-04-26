@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
 using A2SPA.Data.Models;
+using A2SPA.Data.Repo;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -13,18 +14,18 @@ namespace A2SPA.Api
     [Route("api/[controller]")]
     public class SampleDataController : Controller
     {
-        private readonly A2SPAContext _context;
+        private readonly ITestUserRepository _repo;
 
-        public SampleDataController(A2SPAContext context)
+        public SampleDataController(ITestUserRepository repo)
         {
-            _context = context;
+            _repo = repo;
         }
 
         // GET: api/values
         [HttpGet]
         public TestData Get()
         {
-            return _context.TestData.DefaultIfEmpty(null as TestData).LastOrDefault();
+            return _repo.GetTestData(1);
         }
 
         // GET api/values/5
