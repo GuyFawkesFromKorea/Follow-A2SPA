@@ -1,8 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using A2SPA.Data.Models;
 using System.Linq;
+using System.Threading.Tasks;
+
+using Microsoft.EntityFrameworkCore;
+
+using A2SPA.Data.Models;
 
 namespace A2SPA.Data.Repo
 {
@@ -12,16 +14,35 @@ namespace A2SPA.Data.Repo
         {
         }
 
-        public IEnumerable<TestData> GetTestDatas(int pageSize, int pageNumber)
+        public IQueryable<TestData> GetTestDatas(Int32 pageSize, Int32 pageNumber)
         {
-            var query = DbContext.Set<TestData>().AsQueryable();
-
-            return pageSize > 0 && pageNumber > 0 ? query.Skip((pageNumber - 1) * pageSize).Take(pageSize) : query;
+            return Paging<TestData>(pageSize, pageNumber);
         }
 
-        public TestData GetTestData(int id)
+        public async Task<TestData> GetTestDataAsync(int id)
         {
-            return DbContext.Set<TestData>().Where(t => t.Id == id).FirstOrDefault();
+            return await DbContext.Set<TestData>().FirstOrDefaultAsync(t => t.Id == id);
+        }
+
+        public async Task<int> AddTestDataAsync(TestData data)
+        {
+            this.Add<TestData>(data);
+
+            return await CommitChangesAsync();
+        }
+
+        public async Task<int> UpdateTestDataAsync(TestData data)
+        {
+            this.Update<TestData>(data);
+
+            return await CommitChangesAsync();
+        }
+
+        public async Task<int> DeleteTestDataAsync(TestData data)
+        {
+            Remove<TestData>(data);
+
+            return await CommitChangesAsync();
         }
     }
 }

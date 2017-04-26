@@ -2,8 +2,9 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.Options;
+using A2SPA.Data.Models;
 
-namespace A2SPA.Data.Models
+namespace A2SPA.Data
 {
     public partial class A2SPAContext : DbContext
     {
@@ -30,6 +31,12 @@ namespace A2SPA.Data.Models
         {
             modelBuilder.Entity<TestData>(entity =>
             {
+                entity.Property(e => e.CreateDtm).HasColumnType("datetime");
+
+                entity.Property(e => e.CreateUser)
+                    .IsRequired()
+                    .HasMaxLength(20);
+
                 entity.Property(e => e.Currency).HasColumnType("numeric");
 
                 entity.Property(e => e.EmailAddress)
@@ -39,6 +46,12 @@ namespace A2SPA.Data.Models
                 entity.Property(e => e.Password)
                     .IsRequired()
                     .HasColumnType("varchar(20)");
+
+                entity.Property(e => e.UpdateDtm).HasColumnType("datetime");
+
+                entity.Property(e => e.UpdateUser)
+                    .IsRequired()
+                    .HasMaxLength(20);
 
                 entity.Property(e => e.Username)
                     .IsRequired()

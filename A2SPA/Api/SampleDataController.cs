@@ -25,7 +25,7 @@ namespace A2SPA.Api
         [HttpGet]
         public TestData Get()
         {
-            return _repo.GetTestData(1);
+            return _repo.GetTestDatas(0, 0).FirstOrDefault();
         }
 
         // GET api/values/5
