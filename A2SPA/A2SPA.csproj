@@ -16,22 +16,28 @@
     <Content Include="wwwroot\app\contact.component.ts" />
     <Content Include="wwwroot\app\index.component.ts" />
     <Content Include="wwwroot\app\main.ts" />
+    <Content Include="wwwroot\app\models\testData.ts" />
+    <Content Include="wwwroot\app\rxjs-operators.ts" />
+    <Content Include="wwwroot\app\services\sampleData.service.ts" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Humanizer.xproj" Version="2.1.0" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.0.0" />
     <PackageReference Include="Microsoft.AspNetCore" Version="1.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="1.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.SpaServices" Version="1.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="1.1.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="1.1.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="1.1.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer.Design" Version="1.1.1" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="1.1.1" />
     <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="1.1.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="1.1.0" />    
   </ItemGroup>
   <ItemGroup>
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="1.0.0" />
+    <DotNetCliToolReference Include="Microsoft.DotNet.Watcher.Tools" Version="1.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\A2SPA.Data\A2SPA.Data.csproj" />
   </ItemGroup>
 
 </Project>

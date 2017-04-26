@@ -2,14 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.IO;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.EntityFrameworkCore;
 
-using System.IO;
+using A2SPA.Data.Models;
 
 namespace A2SPA
 {
@@ -19,7 +22,7 @@ namespace A2SPA
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
@@ -29,7 +32,10 @@ namespace A2SPA
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
-        {
+        {            
+            services.AddDbContext<A2SPAContext>(options =>
+                   options.UseSqlServer(Configuration.GetConnectionString("ApplicationDbConnection")));
+
             // Add framework services.
             services.AddMvc();
         }
@@ -43,7 +49,7 @@ namespace A2SPA
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                //app.UseBrowserLink();
+                app.UseBrowserLink();
             }
             else
             {
@@ -64,8 +70,9 @@ namespace A2SPA
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
 
+                // in case multiple SPAs required.
                 routes.MapSpaFallbackRoute("spa-fallback", new { controller = "home", action = "index" });
             });
-        }
+        }    
     }
 }
