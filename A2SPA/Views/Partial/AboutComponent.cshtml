@@ -1,4 +1,4 @@
-﻿addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+﻿@*addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers*@
 @addTagHelper "*,A2SPA"
 @model A2SPA.ViewModels.TestData
 
@@ -75,13 +75,10 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label for="password">Password</label>
-                            <input type="password" id="password" name="password"
-                                   required minlength="8" maxlength="16"
-                                   class="form-control" placeholder="Password"
-                                   [(ngModel)]="testData.password">
-                        </div>
+                        <tag-di for="Password"></tag-di>
+                    </div>
+                    <div class="panel-footer">
+                        <button type="button" class="btn btn-warning" (click)="addTestData($event)">Save to database</button>
                     </div>
                 </div>
             </div>
@@ -109,11 +106,15 @@
                             <p class="form-control-static">{{ testData.password }}</p>
                         </div>*@
                         @*테그 적용 후*@
+                        <tag-dd for="Id"></tag-dd>
                         <tag-dd for="Username"></tag-dd>
                         @*USD는 달러*@
                         <tag-dd for="Currency" pipe="| currency:'KRW':true:'1.2-2'"></tag-dd>
                         <tag-dd for="EmailAddress"></tag-dd>
                         <tag-dd for="Password"></tag-dd>
+                    </div>
+                    <div class="panel-footer">
+                        <button type="button" class="btn btn-info" (click)="getTestData($event)">Get last record from database</button>
                     </div>
                 </div>
             </div>

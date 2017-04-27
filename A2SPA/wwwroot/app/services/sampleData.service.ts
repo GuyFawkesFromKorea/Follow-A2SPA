@@ -1,5 +1,5 @@
 ﻿import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
+import { Http, Response, Headers } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { TestData } from '../models/testData';
 
@@ -9,6 +9,17 @@ export class SampleDataService {
     constructor(private http: Http) { }
     getSampleData(): Observable<TestData> {
         return this.http.get(this.url + 'sampleData')
+            .map((resp: Response) => resp.json())
+            .catch(this.handleError);
+    }
+
+    addSampleData(testData: TestData): Observable<TestData> {
+        let headers = new Headers({
+            'Content-Type':'application/json'
+        });
+
+        return this.http
+            .post(this.url, JSON.stringify(testData), { headers: headers })
             .map((resp: Response) => resp.json())
             .catch(this.handleError);
     }

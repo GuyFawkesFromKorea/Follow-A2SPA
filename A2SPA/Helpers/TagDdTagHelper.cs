@@ -24,12 +24,11 @@ namespace A2SPA.Helpers
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
-            var pipe = string.IsNullOrEmpty(Pipe) ? string.Empty : Pipe;
-
             var labelTag = new TagBuilder("label");
             labelTag.InnerHtml.Append(For.Metadata.Description);
             labelTag.AddCssClass("control-label");
 
+            var pipe = string.IsNullOrEmpty(Pipe) ? string.Empty : Pipe;
             var dataBindExpression = ((DefaultModelMetadata)For.Metadata).DataTypeName == "Password"
                                     ? "******"
                                     : "{{" + For.CamelizedName() + pipe + "}}";
@@ -44,8 +43,6 @@ namespace A2SPA.Helpers
             {
                 pTag.InnerHtml.Append(string.Format("{{{{ {0} }}}}", For.CamelizedName() + pipe));
             }
-            
-
 
             output.TagName = "div";
             output.Attributes.Add("class", "form-group");

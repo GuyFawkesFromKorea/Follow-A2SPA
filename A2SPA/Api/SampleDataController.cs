@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 using A2SPA.Data.Models;
 using A2SPA.Data.Repo;
+using AutoMapper;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -15,17 +16,21 @@ namespace A2SPA.Api
     public class SampleDataController : Controller
     {
         private readonly ITestUserRepository _repo;
+        private readonly IMapper _mapper;
 
-        public SampleDataController(ITestUserRepository repo)
+        public SampleDataController(IMapper mapper, ITestUserRepository repo)
         {
+            _mapper = mapper;
             _repo = repo;
         }
 
         // GET: api/values
         [HttpGet]
-        public TestData Get()
+        public A2SPA.ViewModels.TestData Get()
         {
-            return _repo.GetTestDatas(0, 0).FirstOrDefault();
+            var data = _repo.GetTestDatas(0, 0).LastOrDefault();
+
+            return _mapper.Map<A2SPA.ViewModels.TestData>(data);
         }
 
         // GET api/values/5

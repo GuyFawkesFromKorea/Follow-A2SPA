@@ -15,6 +15,8 @@ using Microsoft.EntityFrameworkCore;
 using A2SPA.Data.Models;
 using A2SPA.Data;
 using A2SPA.Data.Repo;
+using AutoMapper;
+using A2SPA.Profiles;
 
 namespace A2SPA
 {
@@ -35,16 +37,29 @@ namespace A2SPA
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //호스트 부분에서 직접 DbContext를 초기화 하는 방법
             //services.AddDbContext<A2SPAContext>(options =>
             //       options.UseSqlServer(Configuration.GetConnectionString("ApplicationDbConnection")));
 
+            //데이터 레이어 분리시 DbContext 초기화 방법
             services.AddEntityFrameworkSqlServer().AddDbContext<A2SPAContext>();
 
+            //IoC 등록
             services.AddScoped<ITestUserRepository, TestUserRepository>();
+
+            //IoC Mapper 등록
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile(new AutoMapperProfileConfiguration());
+            });
+
+            var mapper = config.CreateMapper();
+            services.AddSingleton(mapper);
 
             // Add framework services.
             services.AddMvc();
 
+            // 데이터 레이어에 AppSettings을 이용한 커넥션 스트링 초기화 방법. 
             services.AddOptions();
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
             services.AddSingleton<IConfiguration>(Configuration);

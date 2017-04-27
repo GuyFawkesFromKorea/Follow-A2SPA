@@ -21,6 +21,15 @@ var SampleDataService = (function () {
             .map(function (resp) { return resp.json(); })
             .catch(this.handleError);
     };
+    SampleDataService.prototype.addSampleData = function (testData) {
+        var headers = new http_1.Headers({
+            'Content-Type': 'application/json'
+        });
+        return this.http
+            .post(this.url, JSON.stringify(testData), { headers: headers })
+            .map(function (resp) { return resp.json(); })
+            .catch(this.handleError);
+    };
     // from https://angular.io/docs/ts/latest/guide/server-communication.html
     SampleDataService.prototype.handleError = function (error) {
         // In a real world app, we might use a remote logging infrastructure

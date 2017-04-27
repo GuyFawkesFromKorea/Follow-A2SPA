@@ -8,6 +8,9 @@ namespace A2SPA.ViewModels
 {
     public class TestData
     {
+        [Display(Description = "Record #")]
+        public int Id { get; set; }
+        
         [Display(Description = "Username")]
         public string Username { get; set; }
 
