@@ -2,16 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 
 using A2SPA.Data.Models;
 using A2SPA.Data.Repo;
+
 using AutoMapper;
+
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace A2SPA.Api
 {
+    [Authorize]
     [Route("api/[controller]")]
     public class SampleDataController : Controller
     {

@@ -2,13 +2,16 @@
 import { Http, Response, Headers } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { TestData } from '../models/testData';
+import { AuthService } from '../security/auth.service';
 
 @Injectable()
 export class SampleDataService {
-    private url: string = 'api/';
-    constructor(private http: Http) { }
+    private url: string = 'api/sampleData';
+
+    constructor(private http: Http, private authService: AuthService) { }
+
     getSampleData(): Observable<TestData> {
-        return this.http.get(this.url + 'sampleData')
+        return this.http.get(this.url, { headers: this.authService.authJsonHeaders() })
             .map((resp: Response) => resp.json())
             .catch(this.handleError);
     }
@@ -19,7 +22,7 @@ export class SampleDataService {
         });
 
         return this.http
-            .post(this.url, JSON.stringify(testData), { headers: headers })
+            .post(this.url, JSON.stringify(testData), { headers: this.authService.authJsonHeaders() })
             .map((resp: Response) => resp.json())
             .catch(this.handleError);
     }

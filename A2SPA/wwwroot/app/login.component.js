@@ -13,44 +13,44 @@ var platform_browser_1 = require("@angular/platform-browser");
 var router_1 = require("@angular/router");
 var http_1 = require("@angular/http");
 var auth_service_1 = require("./security/auth.service");
-var AppComponent = (function () {
-    function AppComponent(router, titleService, http, authService) {
+var LoginViewModel_1 = require("./models/LoginViewModel");
+var LoginComponent = (function () {
+    function LoginComponent(router, titleService, http, authService) {
         this.router = router;
         this.titleService = titleService;
         this.http = http;
         this.authService = authService;
-        this.angularClientSideData = 'Angular';
     }
-    AppComponent.prototype.setTitle = function (newTitle) {
+    LoginComponent.prototype.ngOnInit = function () {
+        this.loginViewModel = new LoginViewModel_1.LoginViewModel();
+    };
+    LoginComponent.prototype.setTitle = function (newTitle) {
         this.titleService.setTitle(newTitle);
     };
-    // provide local page the user's logged in status (do we have a token or not)
-    AppComponent.prototype.isLoggedIn = function () {
-        return this.authService.loggedIn();
-    };
-    // tell the server that the user wants to logout; clears token from server, then calls auth.service to clear token locally in browser
-    AppComponent.prototype.logout = function () {
+    // post the user's login details to server, if authenticated token is returned, then token is saved to session storage
+    LoginComponent.prototype.login = function (event) {
         var _this = this;
-        this.http.get('/connect/logout', { headers: this.authService.authJsonHeaders() })
+        event.preventDefault();
+        var body = 'username=' + this.loginViewModel.email + '&password=' + this.loginViewModel.password + '&grant_type=password';
+        this.http.post('/connect/token', body, { headers: this.authService.contentHeaders() })
             .subscribe(function (response) {
-            // clear token in browser
-            _this.authService.logout();
-            // return to 'home' page
-            _this.router.navigate(['']);
+            // success, save the token to session storage
+            _this.authService.login(response.json());
+            _this.router.navigate(['/about']);
         }, function (error) {
             // failed; TODO: add some nice toast / error handling
             alert(error.text());
             console.log(error.text());
         });
     };
-    return AppComponent;
+    return LoginComponent;
 }());
-AppComponent = __decorate([
+LoginComponent = __decorate([
     core_1.Component({
-        selector: 'my-app',
-        templateUrl: '/partial/appComponent'
+        selector: 'login',
+        templateUrl: '/partial/loginComponent'
     }),
     __metadata("design:paramtypes", [router_1.Router, platform_browser_1.Title, http_1.Http, auth_service_1.AuthService])
-], AppComponent);
-exports.AppComponent = AppComponent;
-//# sourceMappingURL=app.component.js.map
+], LoginComponent);
+exports.LoginComponent = LoginComponent;
+//# sourceMappingURL=login.component.js.map

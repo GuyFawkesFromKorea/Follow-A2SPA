@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.IO;
+using System.Security.Claims;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -11,12 +12,19 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http.Authentication;
+
+using AspNet.Security.OpenIdConnect.Primitives;
+
+using AutoMapper;
 
 using A2SPA.Data.Models;
 using A2SPA.Data;
 using A2SPA.Data.Repo;
-using AutoMapper;
 using A2SPA.Profiles;
+using A2SPA.Models;
 
 namespace A2SPA
 {
@@ -41,8 +49,53 @@ namespace A2SPA
             //services.AddDbContext<A2SPAContext>(options =>
             //       options.UseSqlServer(Configuration.GetConnectionString("ApplicationDbConnection")));
 
+            services.AddDbContext<IdentityContext>(options =>
+                    options.UseSqlServer(Configuration.GetConnectionString("ApplicationDbConnection")));
+
             //데이터 레이어 분리시 DbContext 초기화 방법
-            services.AddEntityFrameworkSqlServer().AddDbContext<A2SPAContext>();
+            services.AddEntityFrameworkSqlServer().AddDbContext<A2SPAContext>(options =>
+            {
+                // Register the entity sets needed by OpenIddict.
+                // Note: use the generic overload if you need
+                // to replace the default OpenIddict entities.
+
+                options.UseOpenIddict();
+            });
+
+            // Register the Identity services.
+            services.AddIdentity<ApplicationUser, IdentityRole>()
+                .AddEntityFrameworkStores<IdentityContext>()
+                .AddDefaultTokenProviders();
+
+            // Configure Identity to use the same JWT claims as OpenIddict instead
+            // of the legacy WS-Federation claims it uses by default (ClaimTypes),
+            // which saves you from doing the mapping in your authorization controller.
+            services.Configure<IdentityOptions>(options =>
+            {
+                options.ClaimsIdentity.UserNameClaimType = OpenIdConnectConstants.Claims.Name;
+                options.ClaimsIdentity.UserIdClaimType = OpenIdConnectConstants.Claims.Subject;
+                //options.ClaimsIdentity.RoleClaimType = OpenIdConnectConstants.Claims.Role;
+            });
+
+            // Register the OpenIddict services.
+            services.AddOpenIddict()
+                // Register the Entity Framework stores.
+                .AddEntityFrameworkCoreStores<A2SPAContext>()
+
+                // Register the ASP.NET Core MVC binder used by OpenIddict.
+                // Note: if you don't call this method, you won't be able to
+                // bind OpenIdConnectRequest or OpenIdConnectResponse parameters.
+                .AddMvcBinders()
+
+                // Enable the token endpoint.
+                .EnableTokenEndpoint("/connect/token")
+
+                // Enable the password flow.
+                .AllowPasswordFlow()
+
+                // During development, you can disable the HTTPS requirement.
+                .DisableHttpsRequirement();
+        
 
             //IoC 등록
             services.AddScoped<ITestUserRepository, TestUserRepository>();
@@ -80,6 +133,8 @@ namespace A2SPA
             {
                 app.UseExceptionHandler("/Home/Error");
             }
+            
+            app.UseOpenIddict();
 
             app.UseDefaultFiles();
             app.UseStaticFiles();

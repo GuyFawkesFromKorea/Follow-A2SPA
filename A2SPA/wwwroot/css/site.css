@@ -43,4 +43,9 @@ textarea {
 }
 .ng-invalid:not(form)  {
   border-left: 5px solid #a94442; /* red */
-} 
+}
+
+/* hidden .. see: <a href="http://www.talkingdotnet.com/dont-use-hidden-attribute-angularjs-2/">http://www.talkingdotnet.com/dont-use-hidden-attribute-angularjs-2/</a> */
+[hidden] {
+    display: none !important;
+}

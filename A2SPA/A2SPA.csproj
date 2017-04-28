@@ -15,23 +15,39 @@
     <Content Include="wwwroot\app\app.routing.ts" />
     <Content Include="wwwroot\app\contact.component.ts" />
     <Content Include="wwwroot\app\index.component.ts" />
+    <Content Include="wwwroot\app\login.component.ts" />
     <Content Include="wwwroot\app\main.ts" />
+    <Content Include="wwwroot\app\models\LoginViewModel.ts" />
+    <Content Include="wwwroot\app\models\RegisterViewModel.ts" />
     <Content Include="wwwroot\app\models\testData.ts" />
+    <Content Include="wwwroot\app\register.component.ts" />
     <Content Include="wwwroot\app\rxjs-operators.ts" />
+    <Content Include="wwwroot\app\security\auth-guard.service.ts" />
+    <Content Include="wwwroot\app\security\auth.service.ts" />
+    <Content Include="wwwroot\app\security\OpenIdDictToken.ts" />
     <Content Include="wwwroot\app\services\sampleData.service.ts" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="AspNet.Security.OAuth.Introspection" Version="1.0.0-beta1-final" />
+    <PackageReference Include="AspNet.Security.OAuth.Validation" Version="1.0.0-beta1-final" />
     <PackageReference Include="AutoMapper" Version="6.0.2" />
     <PackageReference Include="Humanizer.xproj" Version="2.1.0" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.0.0" />
     <PackageReference Include="Microsoft.AspNetCore" Version="1.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="1.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="1.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="1.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.SpaServices" Version="1.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="1.1.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="1.1.1" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="1.1.1" />
     <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="1.1.0" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="1.1.0" />    
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="1.1.0" />
+
+    <PackageReference Include="OpenIddict" Version="1.0.0-beta2-0580" />
+    <PackageReference Include="OpenIddict.Core" Version="1.0.0-beta2-0580" />
+    <PackageReference Include="OpenIddict.EntityFrameworkCore" Version="1.0.0-beta2-0580" />
+    <PackageReference Include="OpenIddict.Mvc" Version="1.0.0-beta2-0580" />
   </ItemGroup>
   <ItemGroup>
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="1.0.0" />
