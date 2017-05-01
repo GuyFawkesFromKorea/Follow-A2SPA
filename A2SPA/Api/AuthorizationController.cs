@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using NSwag.Annotations;
 using OpenIddict.Core;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,7 @@ using System.Threading.Tasks;
 
 namespace A2SPA.Api
 {
+    [SwaggerIgnore]
     public class AuthorizationController : Controller
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
@@ -29,7 +31,7 @@ namespace A2SPA.Api
             _userManager = userManager;
         }
 
-        [HttpPost("~/connect/tokne"), Produces("application/json")]
+        [HttpPost("~/connect/token"), Produces("application/json")]
         public async Task<IActionResult> Exchange(OpenIdConnectRequest request)
         {
             Debug.Assert(request.IsTokenRequest(),

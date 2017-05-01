@@ -25,6 +25,11 @@ using A2SPA.Data;
 using A2SPA.Data.Repo;
 using A2SPA.Profiles;
 using A2SPA.Models;
+using NSwag.AspNetCore;
+using System.Reflection;
+using NJsonSchema;
+using NSwag.SwaggerGeneration.WebApi.Processors.Security;
+using NSwag;
 
 namespace A2SPA
 {
@@ -179,6 +184,24 @@ namespace A2SPA
 
             if (env.IsDevelopment())
             {
+                app.UseSwaggerUi(typeof(Startup).GetTypeInfo().Assembly, new SwaggerUiOwinSettings()
+                {
+                    OperationProcessors =
+                {
+                    new OperationSecurityScopeProcessor("apikey")
+                },
+                    DocumentProcessors =
+                {
+                    new SecurityDefinitionAppender("apikey", new SwaggerSecurityScheme
+                    {
+                        Type = SwaggerSecuritySchemeType.ApiKey,
+                        Name = "Authorization",
+                        In = SwaggerSecurityApiKeyLocation.Header
+                    })
+                },
+                    DefaultPropertyNameHandling = PropertyNameHandling.CamelCase
+                });
+
                 IdentityDbInitializer.Initialize(identityContext);
                 DbInitializer.Initialize(context);
             }

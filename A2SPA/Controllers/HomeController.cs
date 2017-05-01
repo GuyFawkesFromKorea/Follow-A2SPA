@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using NSwag.Annotations;
 
 namespace A2SPA.Controllers
 {
+    [SwaggerIgnore]
     public class HomeController : Controller
     {
         public IActionResult Index()
