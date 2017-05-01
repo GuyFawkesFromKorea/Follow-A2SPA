@@ -34,8 +34,7 @@ namespace A2SPA.Data
             {
                 entity.Property(e => e.CreateDtm).HasColumnType("datetime");
 
-                entity.Property(e => e.CreateUser)
-                    .IsRequired()
+                entity.Property(e => e.CreateUser)                    
                     .HasMaxLength(20);
 
                 entity.Property(e => e.Currency).HasColumnType("numeric");
@@ -50,8 +49,7 @@ namespace A2SPA.Data
 
                 entity.Property(e => e.UpdateDtm).HasColumnType("datetime");
 
-                entity.Property(e => e.UpdateUser)
-                    .IsRequired()
+                entity.Property(e => e.UpdateUser)                    
                     .HasMaxLength(20);
 
                 entity.Property(e => e.Username)

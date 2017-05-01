@@ -45,27 +45,34 @@ namespace A2SPA
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Add framework services.
+            services.AddMvc();
+
             //호스트 부분에서 직접 DbContext를 초기화 하는 방법
             //services.AddDbContext<A2SPAContext>(options =>
             //       options.UseSqlServer(Configuration.GetConnectionString("ApplicationDbConnection")));
 
             services.AddDbContext<IdentityContext>(options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("ApplicationDbConnection")));
-
-            //데이터 레이어 분리시 DbContext 초기화 방법
-            services.AddEntityFrameworkSqlServer().AddDbContext<A2SPAContext>(options =>
             {
-                // Register the entity sets needed by OpenIddict.
-                // Note: use the generic overload if you need
-                // to replace the default OpenIddict entities.
+                options.UseSqlServer(Configuration.GetConnectionString("ApplicationDbConnection"));
 
                 options.UseOpenIddict();
             });
 
+            //데이터 레이어 분리시 DbContext 초기화 방법
+            services.AddEntityFrameworkSqlServer().AddDbContext<A2SPAContext>();
+
             // Register the Identity services.
-            services.AddIdentity<ApplicationUser, IdentityRole>()
-                .AddEntityFrameworkStores<IdentityContext>()
-                .AddDefaultTokenProviders();
+            services.AddIdentity<ApplicationUser, IdentityRole>(o =>
+            {
+                o.Password.RequireDigit = false;
+                o.Password.RequireLowercase = false;
+                o.Password.RequireUppercase = false;
+                o.Password.RequireNonAlphanumeric = false;
+                o.Password.RequiredLength = 6;
+            })
+            .AddEntityFrameworkStores<IdentityContext>()
+            .AddDefaultTokenProviders();
 
             // Configure Identity to use the same JWT claims as OpenIddict instead
             // of the legacy WS-Federation claims it uses by default (ClaimTypes),
@@ -92,9 +99,11 @@ namespace A2SPA
 
                 // Enable the password flow.
                 .AllowPasswordFlow()
-
+                
                 // During development, you can disable the HTTPS requirement.
                 .DisableHttpsRequirement();
+                
+                
         
 
             //IoC 등록
@@ -109,9 +118,6 @@ namespace A2SPA
             var mapper = config.CreateMapper();
             services.AddSingleton(mapper);
 
-            // Add framework services.
-            services.AddMvc();
-
             // 데이터 레이어에 AppSettings을 이용한 커넥션 스트링 초기화 방법. 
             services.AddOptions();
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
@@ -119,7 +125,7 @@ namespace A2SPA
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, A2SPAContext context, IdentityContext identityContext)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
@@ -133,7 +139,24 @@ namespace A2SPA
             {
                 app.UseExceptionHandler("/Home/Error");
             }
-            
+            // Add a middleware used to validate access
+            // tokens and protect the API endpoints.
+            app.UseOAuthValidation();
+
+            // Alternatively, you can also use the introspection middleware.
+            // Using it is recommended if your resource server is in a
+            // different application/separated from the authorization server.
+            //
+            // app.UseOAuthIntrospection(options =>
+            // {
+            //     options.AutomaticAuthenticate = true;
+            //     options.AutomaticChallenge = true;
+            //     options.Authority = "http://localhost:58795/";
+            //     options.Audiences.Add("resource_server");
+            //     options.ClientId = "resource_server";
+            //     options.ClientSecret = "875sqd4s5d748z78z7ds1ff8zz8814ff88ed8ea4z4zzd";
+            // });
+
             app.UseOpenIddict();
 
             app.UseDefaultFiles();
@@ -153,6 +176,12 @@ namespace A2SPA
                 // in case multiple SPAs required.
                 routes.MapSpaFallbackRoute("spa-fallback", new { controller = "home", action = "index" });
             });
+
+            if (env.IsDevelopment())
+            {
+                IdentityDbInitializer.Initialize(identityContext);
+                DbInitializer.Initialize(context);
+            }
         }    
     }
 }

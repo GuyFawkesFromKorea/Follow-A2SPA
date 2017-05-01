@@ -31,6 +31,10 @@ namespace A2SPA.Api
                 {
                     return Ok();
                 }
+                else
+                {
+                    return BadRequest(result.Errors);
+                }
             }
 
             return BadRequest(ModelState);
