@@ -1,35 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.IO;
-using System.Security.Claims;
-
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.FileProviders;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Http.Authentication;
+﻿using A2SPA.Data;
+using A2SPA.Data.Repo;
+using A2SPA.Models;
+using A2SPA.Profiles;
 
 using AspNet.Security.OpenIdConnect.Primitives;
 
 using AutoMapper;
 
-using A2SPA.Data.Models;
-using A2SPA.Data;
-using A2SPA.Data.Repo;
-using A2SPA.Profiles;
-using A2SPA.Models;
-using NSwag.AspNetCore;
-using System.Reflection;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.Logging;
+
 using NJsonSchema;
-using NSwag.SwaggerGeneration.WebApi.Processors.Security;
 using NSwag;
+using NSwag.AspNetCore;
+using NSwag.SwaggerGeneration.WebApi.Processors.Security;
+
+using System.IO;
+using System.Reflection;
 
 namespace A2SPA
 {
@@ -59,7 +52,7 @@ namespace A2SPA
 
             services.AddDbContext<IdentityContext>(options =>
             {
-                options.UseSqlServer(Configuration.GetConnectionString("ApplicationDbConnection"));
+                options.UseSqlServer(Configuration.GetConnectionString("AuthDbConnection"));
 
                 options.UseOpenIddict();
             });
